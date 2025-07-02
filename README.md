@@ -1,4 +1,4 @@
-# IS-CLUST: Nonsmooth Clustering with LMBM and HSM
+# Clustering Optimization with IS-CLUST, LMBM and HSM
 
 This repository implements the incremental clustering algorithm **IS-CLUST**, combining the *Minimum Sum-of-Distances Clustering* approach with two different nonsmooth optimization methods:
 
@@ -11,26 +11,34 @@ The code is modular and structured for experimentation and performance compariso
 
 ## 📁 Project Structure
 
-- `MSIncClustSolver.py`  
-  Contains the core implementation of the **MSInc-CLUST** algorithm. For each cluster increment:
-  - Generates good candidate points (A₅) via an auxiliary optimization problem.
-  - Selects the best candidate via the full clustering objective.
-  - Supports both LMBM and HSM as underlying optimization strategies.
+- `src/MSIncClustSolver.py`  
+  Core implementation of the **MSInc-CLUST** algorithm. For each cluster increment:
+  - Generates candidate centers (`A₅`) via an auxiliary optimization problem.
+  - Selects the best candidate using the full clustering objective.
+  - Supports both LMBM and HSM as solvers.
 
-- `LMBMSolver.py`  
-  Custom implementation of the Limited Memory Bundle Method, capable of solving nonsmooth, nonconvex problems using:
+- `src/LMBMSolver.py`  
+  Custom implementation of the Limited Memory Bundle Method:
   - Serious/null step control
   - Subgradient aggregation
-  - Limited-memory quasi-Newton updates (L-BFGS and SR1)
+  - Limited-memory quasi-Newton updates (L-BFGS or SR1)
 
-- `objective.py`  
-  - `ClusteringObjective`: Full nonsmooth clustering loss + subgradient  
-  - `AuxiliaryObjective`: Simplified (auxiliary) clustering objective used to filter candidate centers
+- `src/HSMSolver.py`  
+  - `SmoothedClusterObjective`: Smooth approximation of the clustering loss  
+  - `SmoothingSolver`: τ-decay wrapper using L-BFGS-B
 
-- `HSMSolver.py`  
-  - `SmoothedClusterObjective`: Smooth version of the full clustering problem (used in HSM)  
-  - `SmoothedAuxiliaryObjective`: Smooth version of the auxiliary problem  
-  - `SmoothingSolver`: τ-scheduling wrapper using L-BFGS-B
+- `src/objective.py`  
+  - `ClusteringObjective`: Nonsmooth full loss + subgradient  
+  - `AuxiliaryObjective`: Simplified auxiliary clustering loss
+
+- `src/tests.py`  
+  Main test script. Loads datasets, runs clustering with various methods (k-means, LMBM, HSM), and generates performance metrics and visualizations.
+
+- `data/`  
+  Input datasets: `Mall_Customers.csv`, `OnlineNewsPopularity.csv`, `segmentation.data`, etc.
+
+- `output/`  
+  Automatically generated clustering results (CSV) and plots (PNG)
 
 ---
 
@@ -38,17 +46,20 @@ The code is modular and structured for experimentation and performance compariso
 
 ### Step-by-step Process
 
-1. **Initialization**: The first center is the centroid of all data points.
-2. **Incremental Loop (for `k` clusters)**:
-   - Generate candidate points from `A₀` using local distances.
-   - Filter and refine candidates through an auxiliary optimization (solved with LMBM or HSM).
-   - Evaluate the full clustering objective for all `A₅` candidates.
-   - Choose the best-performing center and append it.
-3. **(Optional)**: Run a final refinement with the full clustering objective over all centers.
+1. **Initialization**: Start with the global centroid as the first cluster center.
+2. **Incremental Loop for `k` clusters**:
+   - Generate local candidates using data point neighborhoods.
+   - Refine with an auxiliary clustering objective (solved by LMBM or HSM).
+   - Evaluate full loss on candidate set (`A₅`) and pick the best.
+3. **Optional refinement**: Perform post-processing over all found centers.
 
 ---
 
-## 🛠 Configuration Example
+## ⚙️ Configuration
+
+Controlled via `CONFIG` in `src/config.py`.
+
+### Example:
 
 ```python
 CONFIG = {
@@ -76,3 +87,17 @@ CONFIG = {
         "max_iter": 15
     }
 }
+
+```
+## 📦 Requirements
+
+You can install all dependencies via:
+pip install -r requirements.txt
+
+
+
+
+## License & Credits
+
+Developed as part of a seminar on continuous optimization for clustering.
+Supervised at the Institute for Operations Research (IOR), KIT. by Msc. Stefan Schwarze
