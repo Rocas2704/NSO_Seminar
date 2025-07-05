@@ -55,7 +55,7 @@ class MSIncClustSolver:
 
             print(f"Cluster {l}: evaluated {len(A5)} candidates → best value: {best_val:.4f}")
             centers.append(best_y)
-            print(f"Nuevos centros hasta k={l}:\n", np.array(centers))
+            print(f"New centers till k={l}:\n", np.array(centers))
 
         return np.array(centers)
 

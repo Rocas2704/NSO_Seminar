@@ -21,17 +21,17 @@ from src.config import CONFIG
 
 # === Loaders ===
 def load_mall_data():
-    df = pd.read_csv("data/Mall_Customers.csv")
+    df = pd.read_csv("../data/Mall_Customers.csv")
     df = df.select_dtypes(include=[np.number])  # Only numeric columns
     return StandardScaler().fit_transform(df)
 
 def load_segmentation_data():
-    df = pd.read_csv("data/segmentation.data", skiprows=5, header=None)
+    df = pd.read_csv("../data/segmentation.data", skiprows=5, header=None)
     df = df.drop(columns=[0])  # drop label column
     return StandardScaler().fit_transform(df.values)
 
 def load_online_news_data():
-    df = pd.read_csv("data/OnlineNewsPopularity.csv")
+    df = pd.read_csv("../data/OnlineNewsPopularity.csv")
     df = df.drop(columns=[col for col in ['url', ' shares', 'shares'] if col in df.columns])
     return StandardScaler().fit_transform(df.values)
 

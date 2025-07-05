@@ -52,7 +52,7 @@ class ClusteringObjective:
         return f_val / self.m, grad.flatten() / self.m
 
 class AuxiliaryObjective:
-    def __init__(self, A: np.ndarray, current_centers: np.ndarray, norm: str = "l2"):
+    def __init__(self, A: np.ndarray, current_centers: np.ndarray, norm: str):
         self.A = A
         self.X = current_centers  # (k-1) x n
         self.norm = norm
@@ -94,7 +94,6 @@ class AuxiliaryObjective:
 
         grad = np.zeros_like(y)
         if self.norm == "l2":
-            # Solo usar puntos donde d < r_prev y d > 0 para evitar división por cero
             valid = mask & (dists > 1e-8)
             grad = np.sum((diffs[valid].T / dists[valid]).T, axis=0)
         elif self.norm == "l1":
