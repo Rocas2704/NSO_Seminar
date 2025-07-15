@@ -9,7 +9,7 @@ The code is modular and structured for experimentation and performance compariso
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 - `src/MSIncClustSolver.py`  
   Core implementation of the **MSInc-CLUST** algorithm. For each cluster increment:
@@ -42,7 +42,7 @@ The code is modular and structured for experimentation and performance compariso
 
 ---
 
-## 🧪 How It Works
+## How It Works
 
 ### Step-by-step Process
 
@@ -89,7 +89,7 @@ CONFIG = {
 }
 
 ```
-## 📦 Requirements
+## Requirements
 
 You can install all dependencies via:
 pip install -r requirements.txt
