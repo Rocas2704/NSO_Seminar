@@ -55,7 +55,7 @@ The code is modular and structured for experimentation and performance compariso
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 Controlled via `CONFIG` in `src/config.py`.
 
